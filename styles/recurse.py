@@ -1,34 +1,6 @@
 
 from style_tool_kits import *
 
-refered_struct_space={}
-
-def resolve_struct_reference_relavant(struct_info):
-	struct_name=struct_info['struct_name_list']['use_name']
-	if(struct_name in refered_struct_space):
-		return refered_struct_space[struct_name]
-	else:
-		maxsize,_=count_struct_maxsize(struct_info)
-
-		struct_info = copy(struct_info)
-		register_struct(refered_struct_space,struct_info)
-
-		struct_info['maxsize']=maxsize
-		
-		struct_varlist = struct_info['var_info_list']
-		for var_info in struct_varlist:
-			vartype=var_info['vartype']
-			if(vartype=='refer'):
-				refername=var_info['refername']
-				my_assert(refername in struct_info_list,'')
-				refered_struct=struct_info_list[refername]
-				var_info['refered_definition']=refername
-				var_info['maxsize'],_=count_struct_maxsize(refered_struct)
-
-		return struct_info
-	error('')
-	pass
-
 def get_refered_definition(var_info):
 	# return refered_packagename+var_info['refered_definition']
 	return "'"+var_info['refered_definition']+"'"
@@ -185,3 +157,20 @@ def parse_to_tidy_recurse_style(struct_info):
 
 	return struct_string,struct_body,struct_head
 	pass
+
+def parse_target_struct(struct_info):
+	struct_info = resolve_struct_reference_relavant_to_recurse_style(struct_info)
+	struct_string = parse_to_tidy_recurse_style(struct_info)
+	return struct_string
+
+def parse_struct_list(struct_info_list,request_id_list_name='rid.'):
+	struct_string_lines = list()
+	for value in struct_info_list.values():
+		struct_string,struct_body,struct_head = parse_target_struct(value)
+		#struct_string='{}={}'.format(struct_head.lower(),struct_body)
+		struct_string_lines.append(struct_string)
+
+	struct_string_lines.sort()
+	struct_list_string = ',\n\n'.join(struct_string_lines)
+	struct_list_string = wrap_list_string(packagename,struct_list_string)
+	return struct_list_string

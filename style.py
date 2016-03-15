@@ -6,23 +6,6 @@ style_name=sys.argv[1]
 
 exec('from styles.'+style_name+' import *')
 
-def parse_target_struct(struct_info):
-	struct_info = resolve_struct_reference_relavant(struct_info)
-	struct_string = parse_to_tidy_recurse_style(struct_info)
-	return struct_string
-
-def parse_struct_list(struct_info_list,request_id_list_name='rid.'):
-	struct_string_lines = list()
-	for value in struct_info_list.values():
-		struct_string,struct_body,struct_head = parse_target_struct(value)
-		#struct_string='{}={}'.format(struct_head.lower(),struct_body)
-		struct_string_lines.append(struct_string)
-
-	struct_string_lines.sort()
-	struct_list_string = ',\n\n'.join(struct_string_lines)
-	struct_list_string = wrap_list_string(packagename,struct_list_string)
-	return struct_list_string
-
 parse_struct_list= parse_struct_list
 
 if __name__ == '__main__':
@@ -40,7 +23,7 @@ if __name__ == '__main__':
 
 	#print(const_var_string)
 
-	f = open('inf.lua','w')
+	f = open('inf.lua','w',encoding='utf-8')
 	#f.write(marcro_string)
 	#f.write(const_var_string)
 	f.write(struct_string)

@@ -186,3 +186,71 @@ def count_struct_maxsize(struct_info):
 	struct_info['maxsize']=maxsize
 
 	return maxsize,struct_info
+
+def resolve_varlist_reference_relavant(struct_info):
+	struct_varlist = {}
+	struct_varlist = struct_info['var_info_list']
+	struct_varlist_for_modify = copy(struct_varlist)
+	struct_varlist_list = dict()
+
+	last_type=None
+	last_index = 0
+	for var_info in struct_varlist:
+		vartype = var_info['vartype']
+		if(vartype == 'refer'):
+			varname = var_info['refername']
+			refer_varlist = resolve_varlist_reference_relavant(struct_info_list[varname])
+			index = struct_varlist.index(var_info)
+			struct_varlist_list[index] = refer_varlist
+			#if(index - last_index > 1):
+			if(index!=last_index and last_type != 'refer'):
+				struct_varlist_list[last_index] = struct_varlist[last_index:index]
+
+			last_index = index + 1
+			last_type=True
+		else:
+			last_type=False
+	
+	struct_varlist_list[last_index] = struct_varlist[last_index:]
+
+	final_varlist = list()
+	for value in struct_varlist_list.values():
+		final_varlist.extend(value)
+
+	return final_varlist
+	pass
+
+def resolve_struct_reference_relavant(struct_info):
+	struct_info = copy(struct_info)
+	struct_varlist = resolve_varlist_reference_relavant(struct_info)
+	struct_info['var_info_list'] = struct_varlist
+	return struct_info
+	pass
+	
+refered_struct_space={}
+
+def resolve_struct_reference_relavant_to_recurse_style(struct_info):
+	struct_name=struct_info['struct_name_list']['use_name']
+	if(struct_name in refered_struct_space):
+		return refered_struct_space[struct_name]
+	else:
+		maxsize,_=count_struct_maxsize(struct_info)
+
+		struct_info = copy(struct_info)
+		register_struct(refered_struct_space,struct_info)
+
+		struct_info['maxsize']=maxsize
+		
+		struct_varlist = struct_info['var_info_list']
+		for var_info in struct_varlist:
+			vartype=var_info['vartype']
+			if(vartype=='refer'):
+				refername=var_info['refername']
+				my_assert(refername in struct_info_list,'')
+				refered_struct=struct_info_list[refername]
+				var_info['refered_definition']=refername
+				var_info['maxsize'],_=count_struct_maxsize(refered_struct)
+
+		return struct_info
+	error('')
+	pass
