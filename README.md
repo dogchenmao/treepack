@@ -11,7 +11,7 @@ tools based on lpack
 
 使用：
 	1.修改 inc_all.h 中的头文件列表，加入自己要解析的文件名列表，其中，'PREDEF_MARCROS.h',需要保留，其他两个可删
-	2.运行命令 python style.py
+	2.运行命令 python style.py recurse
 	3.生成的 lua 代码在 inf.lua 文件里
 
 注意：
