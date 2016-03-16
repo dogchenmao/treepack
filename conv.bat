@@ -1,1 +1,1 @@
-python3 treepack/style.py %1
+@python3 treepack/style.py %1

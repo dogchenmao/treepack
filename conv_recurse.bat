@@ -1,1 +1,1 @@
-python3 treepack/style.py recurse
+@python3 treepack/style.py recurse
