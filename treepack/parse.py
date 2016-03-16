@@ -214,7 +214,7 @@ def parse_const_include(filename):
 	else:
 		const_include_file_list[filename] = True
 
-	f = open(filename,'r',encoding='ansi')
+	f = open(filename,'r',encoding='gbk')
 	print('parsing ' + filename)
 	parse_content(f)
 	f.close()

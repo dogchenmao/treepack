@@ -23,7 +23,7 @@ if __name__ == '__main__':
 
 	#print(const_var_string)
 
-	f = open('inf.lua','w',encoding='ansi')
+	f = open('inf.lua','w',encoding='gbk')
 	#f.write(marcro_string)
 	#f.write(const_var_string)
 	f.write(struct_string)
