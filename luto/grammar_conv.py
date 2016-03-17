@@ -94,8 +94,9 @@ def catch_boolv_state(line):
 	pass
 
 def conv_boolv_state(line):
-	line = re.sub(r'([^a-zA-Z_]+)TRUE([^a-zA-Z_]+)', r'\1true\2', line)
-	line = re.sub(r'([^a-zA-Z_]+)FALSE([^a-zA-Z_]+)', r'\1false\2', line)
+	line = re.sub(r'([^a-zA-Z_]+)(TRUE|FALSE)([^a-zA-Z_]+)', lambda match:match.group(1) + match.group(2).lower() + match.group(3), line)
+# 	line = re.sub(r'([^a-zA-Z_]+)TRUE([^a-zA-Z_]+)', r'\1true\2', line)
+# 	line = re.sub(r'([^a-zA-Z_]+)FALSE([^a-zA-Z_]+)', r'\1false\2', line)
 	return line
 	pass
 	
